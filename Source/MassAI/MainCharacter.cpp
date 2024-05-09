@@ -10,7 +10,9 @@
 #include "GameFramework/Controller.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "GroomComponent.h"
 #include "InputActionValue.h"
+
 
 
 
@@ -37,12 +39,56 @@ AMainCharacter::AMainCharacter()
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 200.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	Feet = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Feet"));
+	Feet->SetupAttachment(GetMesh());
+	Feet->SetMasterPoseComponent(GetMesh(), true);
+	Feet->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	Legs = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Legs"));
+	Legs->SetupAttachment(GetMesh());
+	Legs->SetMasterPoseComponent(GetMesh(), true);
+	Legs->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	Torso = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Torso"));
+	Torso->SetupAttachment(GetMesh());
+	Torso->SetMasterPoseComponent(GetMesh(), true);
+	Torso->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	Face = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Face"));
+	Face->SetupAttachment(GetMesh());
+	Face->SetMasterPoseComponent(GetMesh(), true);
+	Face->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	Eyelashes = CreateDefaultSubobject<UGroomComponent>(TEXT("Eyelashes"));
+	Eyelashes->SetupAttachment(Face);
+	Eyelashes->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	Fuzz = CreateDefaultSubobject<UGroomComponent>(TEXT("Fuzz"));
+	Fuzz->SetupAttachment(Face);
+	Fuzz->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	Eyebrows = CreateDefaultSubobject<UGroomComponent>(TEXT("Eyebrows"));
+	Eyebrows->SetupAttachment(Face);
+	Eyebrows->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	Hair = CreateDefaultSubobject<UGroomComponent>(TEXT("Hair"));
+	Hair->SetupAttachment(Face);
+	Hair->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	Mustache = CreateDefaultSubobject<UGroomComponent>(TEXT("Mustache"));
+	Mustache->SetupAttachment(Face);
+	Mustache->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+
+	Beard = CreateDefaultSubobject<UGroomComponent>(TEXT("Beard"));
+	Beard->SetupAttachment(Face);
+	Beard->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 }
 
 // Called when the game starts or when spawned
